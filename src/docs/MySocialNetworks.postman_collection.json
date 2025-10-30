@@ -1,0 +1,438 @@
+{
+  "info": {
+    "name": "My Social Networks API",
+    "description": "API RESTful Node.js / Express / MongoDB - Facebook-like by Ervin Goby",
+    "version": "1.0.0"
+  },
+  "item": [
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstname\": \"Ervin\",\n  \"lastname\": \"Goby\",\n  \"email\": \"ervin@example.com\",\n  \"age\": 20,\n  \"city\": \"Paris\"\n}"
+            },
+            "url": { "raw": "http://localhost:3000/user", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["user"] }
+          }
+        },
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "http://localhost:3000/users", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["user"] }
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "http://localhost:3000/user/:id", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["user", ":id"] }
+          }
+        },
+        {
+          "name": "Delete User by ID",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "http://localhost:3000/user/:id", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["user", ":id"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Events",
+      "item": [
+        {
+          "name": "Create Event",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Conférence IA 2025\",\n  \"description\": \"Événement sur l'intelligence artificielle\",\n  \"startDate\": \"2025-11-05T09:00:00Z\",\n  \"endDate\": \"2025-11-05T18:00:00Z\",\n  \"location\": \"EFREI Paris\",\n  \"coverPhoto\": \"ai_event.jpg\",\n  \"isPrivate\": false\n}"
+            },
+            "url": { "raw": "http://localhost:3000/event", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["event"] }
+          }
+        },
+        {
+          "name": "Get All Events",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "http://localhost:3000/events", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["event"] }
+          }
+        },
+        {
+          "name": "Get Event by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "http://localhost:3000/event/:id", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["event", ":id"] }
+          }
+        },
+        {
+          "name": "Add Participant",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"<id_user>\"\n}"
+            },
+            "url": { "raw": "http://localhost:3000/event/:id/addParticipant", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["event", ":id", "addParticipant"] }
+          }
+        },
+        {
+          "name": "Remove Participant",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"<id_user>\"\n}"
+            },
+            "url": { "raw": "http://localhost:3000/event/:id/removeParticipant", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["event", ":id", "removeParticipant"] }
+          }
+        },
+        {
+          "name": "Delete Event by ID",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "http://localhost:3000/event/:id", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["event", ":id"] }
+          }
+        }
+      ]
+    }
+    ,
+{
+  "name": "Groups",
+  "item": [
+    {
+      "name": "Create Group",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"EFREI Dev Team\",\n  \"description\": \"Groupe des développeurs de la promo 2025\",\n  \"type\": \"private\",\n  \"admins\": [\"<id_user_admin>\"]\n}"
+        },
+        "url": { "raw": "http://localhost:3000/group", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["group"] }
+      }
+    },
+    {
+      "name": "Get All Groups",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "http://localhost:3000/groups", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["group"] }
+      }
+    },
+    {
+      "name": "Get Group by ID",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "http://localhost:3000/group/:id", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["group", ":id"] }
+      }
+    },
+    {
+      "name": "Add Member to Group",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"userId\": \"<id_user_membre>\"\n}"
+        },
+        "url": { "raw": "http://localhost:3000/group/:id/addMember", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["group", ":id", "addMember"] }
+      }
+    },
+    {
+      "name": "Remove Member from Group",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"userId\": \"<id_user_membre>\"\n}"
+        },
+        "url": { "raw": "http://localhost:3000/group/:id/removeMember", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["group", ":id", "removeMember"] }
+      }
+    },
+    {
+      "name": "Delete Group by ID",
+      "request": {
+        "method": "DELETE",
+        "url": { "raw": "http://localhost:3000/group/:id", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["group", ":id"] }
+      }
+    }
+  ]
+  
+},
+{
+      "name": "Threads & Messages",
+      "item": [
+        {
+          "name": "Create Thread",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Discussion générale du groupe\",\n  \"group\": \"<id_group>\",\n  \"createdBy\": \"<id_user>\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/thread",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["thread"]
+            }
+          }
+        },
+        {
+          "name": "Get All Threads",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/thread",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["thread"]
+            }
+          }
+        },
+        {
+          "name": "Get Messages by Thread",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/thread/:id/messages",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["thread", ":id", "messages"]
+            }
+          }
+        },
+        {
+          "name": "Add Message to Thread",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"author\": \"<id_user>\",\n  \"content\": \"Salut à tous, bienvenue dans le groupe !\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/thread/:id/message",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["thread", ":id", "message"]
+            }
+          }
+        },
+        {
+          "name": "Delete Message by ID",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "http://localhost:3000/message/:id",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["message", ":id"]
+            }
+          }
+        }
+      ]
+    },
+{
+  "name": "Albums & Photos",
+  "item": [
+    {
+      "name": "Create Album",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"event\": \"<id_event>\",\n  \"title\": \"Souvenirs de la Conférence IA 2025\",\n  \"description\": \"Photos officielles de l’événement\",\n  \"createdBy\": \"<id_user>\"\n}"
+        },
+        "url": { "raw": "http://localhost:3000/album", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["album"] }
+      }
+    },
+    {
+      "name": "Add Photo to Album",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"uploadedBy\": \"<id_user>\",\n  \"url\": \"https://exemple.com/photo1.jpg\",\n  \"caption\": \"Moment fort de la conférence 🎓\"\n}"
+        },
+        "url": { "raw": "http://localhost:3000/album/:id/photo", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["album", ":id", "photo"] }
+      }
+    },
+    {
+      "name": "Add Comment to Photo",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"author\": \"<id_user>\",\n  \"content\": \"Super photo ! L’ambiance y était incroyable 😍\"\n}"
+        },
+        "url": { "raw": "http://localhost:3000/photo/:id/comment", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["photo", ":id", "comment"] }
+      }
+    },
+    {
+      "name": "Get Photos by Album",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "http://localhost:3000/album/:id/photos", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["album", ":id", "photos"] }
+      }
+    },
+    {
+      "name": "Get Comments by Photo",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "http://localhost:3000/photo/:id/comments", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["photo", ":id", "comments"] }
+      }
+    },
+    {
+      "name": "Get All Albums",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "http://localhost:3000/album", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["album"] }
+      }
+    }
+  ]
+}
+,
+{
+  "name": "Polls (Sondages)",
+  "item": [
+    {
+      "name": "Create Poll for Event",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Sondage IA 2025\",\n  \"createdBy\": \"<id_user>\"\n}"
+        },
+        "url": { "raw": "http://localhost:3000/event/:id/poll", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["event", ":id", "poll"] }
+      }
+    },
+    {
+      "name": "Add Question to Poll",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"text\": \"Quel sujet vous a le plus intéressé ?\"\n}"
+        },
+        "url": { "raw": "http://localhost:3000/poll/:id/question", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["poll", ":id", "question"] }
+      }
+    },
+    {
+      "name": "Add Answer to Question",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"text\": \"Deep Learning\"\n}"
+        },
+        "url": { "raw": "http://localhost:3000/question/:id/answer", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["question", ":id", "answer"] }
+      }
+    },
+    {
+      "name": "Vote for Answer",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"user\": \"<id_user>\",\n  \"selectedAnswer\": \"<id_answer>\"\n}"
+        },
+        "url": { "raw": "http://localhost:3000/question/:id/vote", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["question", ":id", "vote"] }
+      }
+    },
+    {
+      "name": "Get Poll Results",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "http://localhost:3000/poll/:id/results", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["poll", ":id", "results"] }
+      }
+    }
+  ]
+},
+{
+  "name": "Tickets (Billetterie)",
+  "item": [
+    {
+      "name": "Create Ticket Type for Event",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Pass journée\",\n  \"price\": 30,\n  \"quantity\": 100,\n  \"createdBy\": \"<id_user>\"\n}"
+        },
+        "url": { "raw": "http://localhost:3000/event/:id/ticketType", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["event", ":id", "ticketType"] }
+      }
+    },
+    {
+      "name": "Get All Ticket Types for Event",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "http://localhost:3000/event/:id/ticketTypes", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["event", ":id", "ticketTypes"] }
+      }
+    },
+    {
+      "name": "Buy Ticket",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"firstName\": \"Léa\",\n  \"lastName\": \"Martin\",\n  \"address\": \"12 rue des Fleurs, Paris\"\n}"
+        },
+        "url": { "raw": "http://localhost:3000/ticketType/:id/buy", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["ticketType", ":id", "buy"] }
+      }
+    },
+    {
+      "name": "Get All Tickets of a Type",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "http://localhost:3000/ticketType/:id/tickets", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["ticketType", ":id", "tickets"] }
+      }
+    }
+  ]
+}
+
+  ]
+}
