@@ -22,8 +22,8 @@ et une **documentation Swagger** complète.
 
 ## Documentation Swagger
 
-Pour accéder à la documentation interactive de l’API :  
-**http://localhost:3000/api-docs**
+Pour accéder à la documentation de l’API :  
+**https://documenter.getpostman.com/view/32717214/2sB3Wny2kf#f9c65c89-0de2-458c-8b53-f7c95df1af03**
 
 Cette interface permet de :
 - Visualiser toutes les routes disponibles
