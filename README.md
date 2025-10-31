@@ -20,7 +20,7 @@ et une **documentation Swagger** complète.
 
 ---
 
-## Documentation Swagger
+## Documentation Postman
 
 Pour accéder à la documentation de l’API :  
 **https://documenter.getpostman.com/view/32717214/2sB3Wny2kf#f9c65c89-0de2-458c-8b53-f7c95df1af03**
