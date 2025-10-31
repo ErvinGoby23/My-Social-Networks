@@ -16,7 +16,7 @@ Il s’agit d’une **API REST complète** permettant de gérer :
 
 L’objectif est de reproduire les fonctionnalités d’un réseau social événementiel moderne,  
 en respectant les **bonnes pratiques REST**, la **validation des données**,  
-et une **documentation Swagger** complète.
+et une **documentation Postman** complète.
 
 ---
 
