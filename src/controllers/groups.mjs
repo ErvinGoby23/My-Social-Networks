@@ -95,26 +95,6 @@ const Groups = class Groups {
     });
   }
 
-  /**
-   * @swagger
-   * /group/{id}:
-   *   get:
-   *     summary: Récupérer un groupe par ID
-   *     description: "Retourne les détails d’un groupe spécifique, incluant ses membres et administrateurs."
-   *     tags: [Groups]
-   *     parameters:
-   *       - name: id
-   *         in: path
-   *         required: true
-   *         description: ID du groupe
-   *         schema:
-   *           type: string
-   *     responses:
-   *       200:
-   *         description: Groupe trouvé
-   *       404:
-   *         description: Groupe introuvable
-   */
   getById() {
     this.app.get('/group/:id', async (req, res) => {
       try {
@@ -128,40 +108,6 @@ const Groups = class Groups {
     });
   }
 
-  /**
-   * @swagger
-   * /group/{id}/addMember:
-   *   patch:
-   *     summary: Ajouter un membre à un groupe
-   *     description: "Ajoute un utilisateur existant à la liste des membres du groupe."
-   *     tags: [Groups]
-   *     parameters:
-   *       - name: id
-   *         in: path
-   *         required: true
-   *         description: ID du groupe
-   *         schema:
-   *           type: string
-   *     requestBody:
-   *       required: true
-   *       content:
-   *         application/json:
-   *           schema:
-   *             type: object
-   *             required:
-   *               - userId
-   *             properties:
-   *               userId:
-   *                 type: string
-   *                 example: 67205f9bc1f7baaf41d3d1b8
-   *     responses:
-   *       200:
-   *         description: Membre ajouté avec succès
-   *       404:
-   *         description: Groupe ou utilisateur introuvable
-   *       400:
-   *         description: Mauvaise requête
-   */
   addMember() {
     this.app.patch('/group/:id/addMember', async (req, res) => {
       try {
@@ -185,40 +131,6 @@ const Groups = class Groups {
     });
   }
 
-  /**
-   * @swagger
-   * /group/{id}/removeMember:
-   *   patch:
-   *     summary: Retirer un membre d’un groupe
-   *     description: "Supprime un utilisateur de la liste des membres d’un groupe."
-   *     tags: [Groups]
-   *     parameters:
-   *       - name: id
-   *         in: path
-   *         required: true
-   *         description: ID du groupe
-   *         schema:
-   *           type: string
-   *     requestBody:
-   *       required: true
-   *       content:
-   *         application/json:
-   *           schema:
-   *             type: object
-   *             required:
-   *               - userId
-   *             properties:
-   *               userId:
-   *                 type: string
-   *                 example: 67205f9bc1f7baaf41d3d1b8
-   *     responses:
-   *       200:
-   *         description: Membre retiré avec succès
-   *       404:
-   *         description: Groupe ou utilisateur introuvable
-   *       400:
-   *         description: Mauvaise requête
-   */
   removeMember() {
     this.app.patch('/group/:id/removeMember', async (req, res) => {
       try {
@@ -240,26 +152,6 @@ const Groups = class Groups {
     });
   }
 
-  /**
-   * @swagger
-   * /group/{id}:
-   *   delete:
-   *     summary: Supprimer un groupe
-   *     description: "Supprime définitivement un groupe existant."
-   *     tags: [Groups]
-   *     parameters:
-   *       - name: id
-   *         in: path
-   *         required: true
-   *         description: ID du groupe à supprimer
-   *         schema:
-   *           type: string
-   *     responses:
-   *       200:
-   *         description: Groupe supprimé avec succès
-   *       500:
-   *         description: Erreur interne du serveur
-   */
   deleteById() {
     this.app.delete('/group/:id', async (req, res) => {
       try {

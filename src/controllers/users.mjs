@@ -7,45 +7,6 @@ const Users = class Users {
     this.run();
   }
 
-  /**
-   * @swagger
-   * /user:
-   *   post:
-   *     summary: Créer un nouvel utilisateur
-   *     description: Ajoute un utilisateur à la base de données.
-   *     tags: [Users]
-   *     requestBody:
-   *       required: true
-   *       content:
-   *         application/json:
-   *           schema:
-   *             type: object
-   *             required:
-   *               - firstname
-   *               - lastname
-   *               - email
-   *             properties:
-   *               firstname:
-   *                 type: string
-   *                 example: Ervin
-   *               lastname:
-   *                 type: string
-   *                 example: Goby
-   *               email:
-   *                 type: string
-   *                 example: ervin@example.com
-   *               age:
-   *                 type: integer
-   *                 example: 20
-   *               city:
-   *                 type: string
-   *                 example: Paris
-   *     responses:
-   *       201:
-   *         description: Utilisateur créé avec succès
-   *       400:
-   *         description: Erreur de validation
-   */
   create() {
     this.app.post('/user', async (req, res) => {
       try {
@@ -65,17 +26,7 @@ const Users = class Users {
     });
   }
 
-  /**
-   * @swagger
-   * /users:
-   *   get:
-   *     summary: Récupérer tous les utilisateurs
-   *     description: Retourne la liste complète des utilisateurs.
-   *     tags: [Users]
-   *     responses:
-   *       200:
-   *         description: Liste des utilisateurs
-   */
+
   getAll() {
     this.app.get('/users', async (req, res) => {
       try {
@@ -87,26 +38,6 @@ const Users = class Users {
     });
   }
 
-  /**
-   * @swagger
-   * /user/{id}:
-   *   get:
-   *     summary: Récupérer un utilisateur par ID
-   *     description: Retourne un utilisateur spécifique grâce à son ID MongoDB.
-   *     tags: [Users]
-   *     parameters:
-   *       - name: id
-   *         in: path
-   *         required: true
-   *         description: ID de l'utilisateur
-   *         schema:
-   *           type: string
-   *     responses:
-   *       200:
-   *         description: Utilisateur trouvé
-   *       404:
-   *         description: Utilisateur introuvable
-   */
   getById() {
     this.app.get('/user/:id', async (req, res) => {
       try {
@@ -118,26 +49,6 @@ const Users = class Users {
     });
   }
 
-  /**
-   * @swagger
-   * /user/{id}:
-   *   delete:
-   *     summary: Supprimer un utilisateur par ID
-   *     description: Supprime un utilisateur de la base de données.
-   *     tags: [Users]
-   *     parameters:
-   *       - name: id
-   *         in: path
-   *         required: true
-   *         description: ID de l'utilisateur
-   *         schema:
-   *           type: string
-   *     responses:
-   *       200:
-   *         description: Utilisateur supprimé avec succès
-   *       500:
-   *         description: Erreur interne du serveur
-   */
   deleteById() {
     this.app.delete('/user/:id', async (req, res) => {
       try {

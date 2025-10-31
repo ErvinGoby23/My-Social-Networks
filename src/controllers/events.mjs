@@ -1,12 +1,6 @@
 import EventModel from '../models/event.mjs';
 import UserModel from '../models/user.mjs';
 
-/**
- * @swagger
- * tags:
- *   name: Events
- *   description: Gestion des événements
- */
 const Events = class Events {
   constructor(app, connect) {
     this.app = app;
@@ -15,56 +9,6 @@ const Events = class Events {
     this.run();
   }
 
-  /**
-   * @swagger
-   * /event:
-   *   post:
-   *     summary: Créer un nouvel événement
-   *     description: "Permet à un organisateur de créer un événement (public ou privé) avec ses informations principales."
-   *     tags: [Events]
-   *     requestBody:
-   *       required: true
-   *       content:
-   *         application/json:
-   *           schema:
-   *             type: object
-   *             required:
-   *               - name
-   *               - startDate
-   *               - endDate
-   *               - location
-   *             properties:
-   *               name:
-   *                 type: string
-   *                 example: Conférence Tech 2025
-   *               description:
-   *                 type: string
-   *                 example: Une conférence dédiée aux nouvelles technologies web.
-   *               startDate:
-   *                 type: string
-   *                 format: date-time
-   *                 example: 2025-11-12T09:00:00Z
-   *               endDate:
-   *                 type: string
-   *                 format: date-time
-   *                 example: 2025-11-12T17:00:00Z
-   *               location:
-   *                 type: string
-   *                 example: Paris - La Défense Arena
-   *               isPrivate:
-   *                 type: boolean
-   *                 example: false
-   *               organizers:
-   *                 type: array
-   *                 items:
-   *                   type: string
-   *                 example: ["67205f81c1f7baaf41d3d1b3"]
-   *     responses:
-   *       201:
-   *         description: Événement créé avec succès
-   *       400:
-   *         description: Erreur de validation ou mauvaise requête
-   */
   create() {
     this.app.post('/event', async (req, res) => {
       try {
@@ -82,19 +26,6 @@ const Events = class Events {
     });
   }
 
-  /**
-   * @swagger
-   * /events:
-   *   get:
-   *     summary: Récupérer tous les événements
-   *     description: "Retourne la liste complète des événements avec leurs organisateurs et participants."
-   *     tags: [Events]
-   *     responses:
-   *       200:
-   *         description: Liste des événements récupérée avec succès
-   *       500:
-   *         description: Erreur interne du serveur
-   */
   getAll() {
     this.app.get('/events', async (req, res) => {
       try {
@@ -108,26 +39,6 @@ const Events = class Events {
     });
   }
 
-  /**
-   * @swagger
-   * /event/{id}:
-   *   get:
-   *     summary: Récupérer un événement par ID
-   *     description: "Retourne les détails d’un événement spécifique (organisateurs, participants, etc.)."
-   *     tags: [Events]
-   *     parameters:
-   *       - name: id
-   *         in: path
-   *         required: true
-   *         description: ID de l’événement
-   *         schema:
-   *           type: string
-   *     responses:
-   *       200:
-   *         description: Événement trouvé
-   *       404:
-   *         description: Événement introuvable
-   */
   getById() {
     this.app.get('/event/:id', async (req, res) => {
       try {
@@ -143,26 +54,6 @@ const Events = class Events {
     });
   }
 
-  /**
-   * @swagger
-   * /event/{id}:
-   *   delete:
-   *     summary: Supprimer un événement
-   *     description: "Supprime un événement existant via son ID."
-   *     tags: [Events]
-   *     parameters:
-   *       - name: id
-   *         in: path
-   *         required: true
-   *         description: ID de l’événement à supprimer
-   *         schema:
-   *           type: string
-   *     responses:
-   *       200:
-   *         description: Événement supprimé avec succès
-   *       500:
-   *         description: Erreur interne du serveur
-   */
   deleteById() {
     this.app.delete('/event/:id', async (req, res) => {
       try {
@@ -174,40 +65,6 @@ const Events = class Events {
     });
   }
 
-  /**
-   * @swagger
-   * /event/{id}/addParticipant:
-   *   patch:
-   *     summary: Ajouter un participant à un événement
-   *     description: "Ajoute un utilisateur à la liste des participants d’un événement existant."
-   *     tags: [Events]
-   *     parameters:
-   *       - name: id
-   *         in: path
-   *         required: true
-   *         description: ID de l’événement
-   *         schema:
-   *           type: string
-   *     requestBody:
-   *       required: true
-   *       content:
-   *         application/json:
-   *           schema:
-   *             type: object
-   *             required:
-   *               - userId
-   *             properties:
-   *               userId:
-   *                 type: string
-   *                 example: 67205f9bc1f7baaf41d3d1b8
-   *     responses:
-   *       200:
-   *         description: Participant ajouté avec succès
-   *       404:
-   *         description: Événement ou utilisateur introuvable
-   *       400:
-   *         description: Mauvaise requête
-   */
   addParticipant() {
     this.app.patch('/event/:id/addParticipant', async (req, res) => {
       try {
@@ -231,40 +88,6 @@ const Events = class Events {
     });
   }
 
-  /**
-   * @swagger
-   * /event/{id}/removeParticipant:
-   *   patch:
-   *     summary: Retirer un participant d’un événement
-   *     description: "Supprime un utilisateur de la liste des participants d’un événement."
-   *     tags: [Events]
-   *     parameters:
-   *       - name: id
-   *         in: path
-   *         required: true
-   *         description: ID de l’événement
-   *         schema:
-   *           type: string
-   *     requestBody:
-   *       required: true
-   *       content:
-   *         application/json:
-   *           schema:
-   *             type: object
-   *             required:
-   *               - userId
-   *             properties:
-   *               userId:
-   *                 type: string
-   *                 example: 67205f9bc1f7baaf41d3d1b8
-   *     responses:
-   *       200:
-   *         description: Participant retiré avec succès
-   *       404:
-   *         description: Événement ou utilisateur introuvable
-   *       400:
-   *         description: Mauvaise requête
-   */
   removeParticipant() {
     this.app.patch('/event/:id/removeParticipant', async (req, res) => {
       try {
