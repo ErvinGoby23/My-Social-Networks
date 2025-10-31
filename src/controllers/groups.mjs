@@ -1,12 +1,6 @@
 import GroupModel from '../models/group.mjs';
 import UserModel from '../models/user.mjs';
 
-/**
- * @swagger
- * tags:
- *   name: Groups
- *   description: Gestion des groupes (publics, privés, secrets)
- */
 const Groups = class Groups {
   constructor(app, connect) {
     this.app = app;
@@ -15,44 +9,6 @@ const Groups = class Groups {
     this.run();
   }
 
-  /**
-   * @swagger
-   * /group:
-   *   post:
-   *     summary: Créer un groupe
-   *     description: "Crée un nouveau groupe avec ses paramètres (type, description, admins, etc.)."
-   *     tags: [Groups]
-   *     requestBody:
-   *       required: true
-   *       content:
-   *         application/json:
-   *           schema:
-   *             type: object
-   *             required:
-   *               - name
-   *               - admins
-   *             properties:
-   *               name:
-   *                 type: string
-   *                 example: Groupe Développeurs SNCF
-   *               description:
-   *                 type: string
-   *                 example: Groupe de partage sur les technologies Angular et Node.js
-   *               type:
-   *                 type: string
-   *                 enum: [public, private, secret]
-   *                 example: public
-   *               admins:
-   *                 type: array
-   *                 items:
-   *                   type: string
-   *                 example: ["67205f81c1f7baaf41d3d1b3"]
-   *     responses:
-   *       201:
-   *         description: Groupe créé avec succès
-   *       400:
-   *         description: Erreur de validation ou mauvaise requête
-   */
   create() {
     this.app.post('/group', async (req, res) => {
       try {
