@@ -32,9 +32,9 @@ Cette interface permet de :
 
 ---
 
-## ⚙️ Installation & Démarrage
+## Installation & Démarrage
 
-### 1️⃣ Installation des dépendances
+### 1️ Installation des dépendances
 npm install
 
 ### 2 Démarrage
