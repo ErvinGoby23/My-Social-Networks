@@ -1,9 +1,20 @@
 import mongoose from 'mongoose';
+const { isValidObjectId } = mongoose;
 
 const Schema = new mongoose.Schema({
-  event: { type: mongoose.Schema.Types.ObjectId, ref: 'Event', required: true },
-  title: { type: String, required: true },
-  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  event: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'Event', 
+    required: true,
+    validate: v => isValidObjectId(v)
+  },
+  title: { type: String, required: true, minlength: 3 },
+  createdBy: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'User', 
+    required: true,
+    validate: v => isValidObjectId(v)
+  },
   createdAt: { type: Date, default: Date.now }
 }, {
   collection: 'polls',

@@ -54,7 +54,13 @@ const Users = class Users {
         res.status(201).json(savedUser);
       } catch (err) {
         console.error(`[ERROR] users/create -> ${err}`);
-        res.status(400).json({ code: 400, message: 'Bad Request' });
+
+        if (err.name === 'ValidationError') {
+          const errors = Object.values(err.errors).map(e => e.message);
+          return res.status(400).json({ code: 400, message: 'Validation Error', errors });
+        }
+
+        res.status(500).json({ code: 500, message: 'Internal Server Error' });
       }
     });
   }

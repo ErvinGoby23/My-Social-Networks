@@ -1,9 +1,17 @@
 import EventModel from '../models/event.mjs';
+import UserModel from '../models/user.mjs';
 
+/**
+ * @swagger
+ * tags:
+ *   name: Events
+ *   description: Gestion des événements
+ */
 const Events = class Events {
   constructor(app, connect) {
     this.app = app;
     this.EventModel = connect.model('Event', EventModel);
+    this.UserModel = connect.model('User', UserModel);
     this.run();
   }
 
@@ -12,7 +20,7 @@ const Events = class Events {
    * /event:
    *   post:
    *     summary: Créer un nouvel événement
-   *     description: Crée un événement avec ses informations principales.
+   *     description: "Permet à un organisateur de créer un événement (public ou privé) avec ses informations principales."
    *     tags: [Events]
    *     requestBody:
    *       required: true
@@ -28,24 +36,21 @@ const Events = class Events {
    *             properties:
    *               name:
    *                 type: string
-   *                 example: Conférence IA 2025
+   *                 example: Conférence Tech 2025
    *               description:
    *                 type: string
-   *                 example: Une conférence sur l'intelligence artificielle et les innovations.
+   *                 example: Une conférence dédiée aux nouvelles technologies web.
    *               startDate:
    *                 type: string
    *                 format: date-time
-   *                 example: 2025-11-05T09:00:00Z
+   *                 example: 2025-11-12T09:00:00Z
    *               endDate:
    *                 type: string
    *                 format: date-time
-   *                 example: 2025-11-05T18:00:00Z
+   *                 example: 2025-11-12T17:00:00Z
    *               location:
    *                 type: string
-   *                 example: EFREI Paris
-   *               coverPhoto:
-   *                 type: string
-   *                 example: ai_event.jpg
+   *                 example: Paris - La Défense Arena
    *               isPrivate:
    *                 type: boolean
    *                 example: false
@@ -53,17 +58,12 @@ const Events = class Events {
    *                 type: array
    *                 items:
    *                   type: string
-   *                   example: 671f91b4b1a2c32f44d8a7e1
-   *               participants:
-   *                 type: array
-   *                 items:
-   *                   type: string
-   *                   example: 671f91b4b1a2c32f44d8a7e9
+   *                 example: ["67205f81c1f7baaf41d3d1b3"]
    *     responses:
    *       201:
    *         description: Événement créé avec succès
    *       400:
-   *         description: Données invalides
+   *         description: Erreur de validation ou mauvaise requête
    */
   create() {
     this.app.post('/event', async (req, res) => {
@@ -72,6 +72,10 @@ const Events = class Events {
         const savedEvent = await event.save();
         res.status(201).json(savedEvent);
       } catch (err) {
+        if (err.name === 'ValidationError') {
+          const errors = Object.values(err.errors).map(e => e.message);
+          return res.status(400).json({ code: 400, message: 'Validation Error', errors });
+        }
         console.error(`[ERROR] events/create -> ${err}`);
         res.status(400).json({ code: 400, message: 'Bad Request' });
       }
@@ -83,11 +87,11 @@ const Events = class Events {
    * /events:
    *   get:
    *     summary: Récupérer tous les événements
-   *     description: Retourne la liste complète des événements enregistrés.
+   *     description: "Retourne la liste complète des événements avec leurs organisateurs et participants."
    *     tags: [Events]
    *     responses:
    *       200:
-   *         description: Liste des événements
+   *         description: Liste des événements récupérée avec succès
    *       500:
    *         description: Erreur interne du serveur
    */
@@ -98,7 +102,7 @@ const Events = class Events {
           .populate('organizers', 'firstname lastname email')
           .populate('participants', 'firstname lastname email');
         res.status(200).json(events);
-      } catch (err) {
+      } catch {
         res.status(500).json({ code: 500, message: 'Internal Server Error' });
       }
     });
@@ -109,16 +113,15 @@ const Events = class Events {
    * /event/{id}:
    *   get:
    *     summary: Récupérer un événement par ID
-   *     description: Retourne les informations d’un événement spécifique.
+   *     description: "Retourne les détails d’un événement spécifique (organisateurs, participants, etc.)."
    *     tags: [Events]
    *     parameters:
    *       - name: id
    *         in: path
    *         required: true
-   *         description: ID de l'événement
+   *         description: ID de l’événement
    *         schema:
    *           type: string
-   *           example: 671f91b4b1a2c32f44d8a7f2
    *     responses:
    *       200:
    *         description: Événement trouvé
@@ -132,12 +135,9 @@ const Events = class Events {
           .populate('organizers', 'firstname lastname email')
           .populate('participants', 'firstname lastname email');
 
-        if (!event) {
-          return res.status(404).json({ code: 404, message: 'Event Not Found' });
-        }
-
+        if (!event) return res.status(404).json({ code: 404, message: 'Event Not Found' });
         res.status(200).json(event);
-      } catch (err) {
+      } catch {
         res.status(500).json({ code: 500, message: 'Internal Server Error' });
       }
     });
@@ -148,13 +148,13 @@ const Events = class Events {
    * /event/{id}:
    *   delete:
    *     summary: Supprimer un événement
-   *     description: Supprime un événement existant à partir de son ID.
+   *     description: "Supprime un événement existant via son ID."
    *     tags: [Events]
    *     parameters:
    *       - name: id
    *         in: path
    *         required: true
-   *         description: ID de l'événement
+   *         description: ID de l’événement à supprimer
    *         schema:
    *           type: string
    *     responses:
@@ -168,7 +168,7 @@ const Events = class Events {
       try {
         const deleted = await this.EventModel.findByIdAndDelete(req.params.id);
         res.status(200).json(deleted || {});
-      } catch (err) {
+      } catch {
         res.status(500).json({ code: 500, message: 'Internal Server Error' });
       }
     });
@@ -177,15 +177,15 @@ const Events = class Events {
   /**
    * @swagger
    * /event/{id}/addParticipant:
-   *   put:
+   *   patch:
    *     summary: Ajouter un participant à un événement
-   *     description: Ajoute un utilisateur existant à la liste des participants d’un événement.
+   *     description: "Ajoute un utilisateur à la liste des participants d’un événement existant."
    *     tags: [Events]
    *     parameters:
    *       - name: id
    *         in: path
    *         required: true
-   *         description: ID de l'événement
+   *         description: ID de l’événement
    *         schema:
    *           type: string
    *     requestBody:
@@ -199,20 +199,24 @@ const Events = class Events {
    *             properties:
    *               userId:
    *                 type: string
-   *                 example: 671f91b4b1a2c32f44d8a7e9
+   *                 example: 67205f9bc1f7baaf41d3d1b8
    *     responses:
    *       200:
-   *         description: Participant ajouté
+   *         description: Participant ajouté avec succès
    *       404:
-   *         description: Événement introuvable
+   *         description: Événement ou utilisateur introuvable
+   *       400:
+   *         description: Mauvaise requête
    */
   addParticipant() {
-    this.app.put('/event/:id/addParticipant', async (req, res) => {
+    this.app.patch('/event/:id/addParticipant', async (req, res) => {
       try {
         const { userId } = req.body;
         const event = await this.EventModel.findById(req.params.id);
-
         if (!event) return res.status(404).json({ message: 'Event not found' });
+
+        const userExists = await this.UserModel.findById(userId);
+        if (!userExists) return res.status(404).json({ message: 'User not found' });
 
         if (!event.participants.includes(userId)) {
           event.participants.push(userId);
@@ -221,6 +225,7 @@ const Events = class Events {
 
         res.status(200).json(event);
       } catch (err) {
+        console.error(`[ERROR] addParticipant -> ${err}`);
         res.status(400).json({ code: 400, message: 'Bad Request' });
       }
     });
@@ -229,15 +234,15 @@ const Events = class Events {
   /**
    * @swagger
    * /event/{id}/removeParticipant:
-   *   put:
-   *     summary: Supprimer un participant d’un événement
-   *     description: Retire un utilisateur de la liste des participants d’un événement.
+   *   patch:
+   *     summary: Retirer un participant d’un événement
+   *     description: "Supprime un utilisateur de la liste des participants d’un événement."
    *     tags: [Events]
    *     parameters:
    *       - name: id
    *         in: path
    *         required: true
-   *         description: ID de l'événement
+   *         description: ID de l’événement
    *         schema:
    *           type: string
    *     requestBody:
@@ -251,26 +256,30 @@ const Events = class Events {
    *             properties:
    *               userId:
    *                 type: string
-   *                 example: 671f91b4b1a2c32f44d8a7e9
+   *                 example: 67205f9bc1f7baaf41d3d1b8
    *     responses:
    *       200:
-   *         description: Participant supprimé
+   *         description: Participant retiré avec succès
    *       404:
-   *         description: Événement introuvable
+   *         description: Événement ou utilisateur introuvable
+   *       400:
+   *         description: Mauvaise requête
    */
   removeParticipant() {
-    this.app.put('/event/:id/removeParticipant', async (req, res) => {
+    this.app.patch('/event/:id/removeParticipant', async (req, res) => {
       try {
         const { userId } = req.body;
         const event = await this.EventModel.findById(req.params.id);
-
         if (!event) return res.status(404).json({ message: 'Event not found' });
+
+        const userExists = await this.UserModel.findById(userId);
+        if (!userExists) return res.status(404).json({ message: 'User not found' });
 
         event.participants = event.participants.filter(id => id.toString() !== userId);
         await event.save();
-
         res.status(200).json(event);
       } catch (err) {
+        console.error(`[ERROR] removeParticipant -> ${err}`);
         res.status(400).json({ code: 400, message: 'Bad Request' });
       }
     });

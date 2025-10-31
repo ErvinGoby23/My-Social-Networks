@@ -1,31 +1,27 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 const { isValidObjectId } = mongoose;
 
 const Schema = new mongoose.Schema({
-  album: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'Album', 
+  event: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Event",
     required: true,
     validate: v => isValidObjectId(v)
   },
-  uploadedBy: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'User', 
+  name: { type: String, required: true, minlength: 2 },
+  price: { type: Number, required: true, min: 0 },
+  quantity: { type: Number, required: true, min: 1 },
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
     required: true,
     validate: v => isValidObjectId(v)
   },
-  url: { 
-    type: String, 
-    required: true,
-    match: /^https?:\/\/[^\s$.?#].[^\s]*$/ 
-  },
-  caption: { type: String, maxlength: 300 },
   createdAt: { type: Date, default: Date.now }
 }, {
-  collection: 'photos',
-  minimize: false,
+  collection: "ticketTypes",
   versionKey: false
-}).set('toJSON', {
+}).set("toJSON", {
   transform: (doc, ret) => {
     ret.id = ret._id;
     delete ret._id;

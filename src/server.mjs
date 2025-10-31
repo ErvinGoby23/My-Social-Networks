@@ -30,6 +30,7 @@ const Server = class Server {
     }
   }
 
+
   middleware() {
     this.app.use(compression());
     this.app.use(cors());
@@ -50,6 +51,8 @@ const Server = class Server {
     new routes.Albums(this.app, this.connect);
     new routes.Photos(this.app, this.connect);
     new routes.Comments(this.app, this.connect);
+    new routes.Polls(this.app, this.connect);
+    new routes.Tickets(this.app, this.connect);
     this.app.use((req, res) => {
       res.status(404).json({ code: 404, message: 'Not Found' });
     });

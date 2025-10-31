@@ -1,8 +1,9 @@
 import mongoose from 'mongoose';
+const { isValidObjectId } = mongoose;
 
 const Schema = new mongoose.Schema({
-  name: { type: String, required: true },
-  description: { type: String },
+  name: { type: String, required: true, minlength: 3 },
+  description: { type: String, maxlength: 500 },
   icon: { type: String },
   coverPhoto: { type: String },
   type: {
@@ -12,8 +13,17 @@ const Schema = new mongoose.Schema({
   },
   allowPosts: { type: Boolean, default: true },
   allowEventCreation: { type: Boolean, default: false },
-  admins: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }],
-  members: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
+  admins: [{ 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'User', 
+    required: true, 
+    validate: v => isValidObjectId(v)
+  }],
+  members: [{ 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'User', 
+    validate: v => isValidObjectId(v)
+  }]
 }, {
   collection: 'groups',
   minimize: false,

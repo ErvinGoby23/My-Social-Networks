@@ -20,7 +20,36 @@ const Threads = class Threads {
    * /thread:
    *   post:
    *     summary: Créer un nouveau fil de discussion
+   *     description: Permet de créer un fil de discussion lié soit à un groupe, soit à un événement.
    *     tags: [Threads]
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             required:
+   *               - title
+   *               - createdBy
+   *             properties:
+   *               title:
+   *                 type: string
+   *                 example: Discussion générale du groupe EFREI
+   *               group:
+   *                 type: string
+   *                 example: 671f6e3d99b6e7d2b18f1a9c
+   *               event:
+   *                 type: string
+   *                 example: null
+   *               createdBy:
+   *                 type: string
+   *                 description: ID de l'utilisateur créateur
+   *                 example: 67203546d8f19bb8b11dc9e4
+   *     responses:
+   *       201:
+   *         description: Thread créé avec succès
+   *       400:
+   *         description: Erreur de validation ou de requête
    */
   createThread() {
     this.app.post('/thread', async (req, res) => {
@@ -29,6 +58,10 @@ const Threads = class Threads {
         const saved = await thread.save();
         res.status(201).json(saved);
       } catch (err) {
+        if (err.name === 'ValidationError') {
+          const errors = Object.values(err.errors).map(e => e.message);
+          return res.status(400).json({ code: 400, message: 'Validation Error', errors });
+        }
         res.status(400).json({ code: 400, message: 'Bad Request' });
       }
     });
@@ -39,7 +72,13 @@ const Threads = class Threads {
    * /thread:
    *   get:
    *     summary: Récupérer tous les fils de discussion
+   *     description: Retourne la liste complète des fils de discussion (groupes ou événements).
    *     tags: [Threads]
+   *     responses:
+   *       200:
+   *         description: Liste des threads récupérée avec succès
+   *       500:
+   *         description: Erreur interne du serveur
    */
   getAllThreads() {
     this.app.get('/thread', async (req, res) => {
@@ -60,7 +99,20 @@ const Threads = class Threads {
    * /thread/{id}/messages:
    *   get:
    *     summary: Récupérer tous les messages d’un fil de discussion
+   *     description: Retourne tous les messages d’un thread, avec auteur et message parent si applicable.
    *     tags: [Threads]
+   *     parameters:
+   *       - name: id
+   *         in: path
+   *         required: true
+   *         description: ID du thread
+   *         schema:
+   *           type: string
+   *     responses:
+   *       200:
+   *         description: Liste des messages
+   *       500:
+   *         description: Erreur interne du serveur
    */
   getMessagesByThread() {
     this.app.get('/thread/:id/messages', async (req, res) => {
@@ -80,7 +132,39 @@ const Threads = class Threads {
    * /thread/{id}/message:
    *   post:
    *     summary: Envoyer un message dans un fil de discussion
+   *     description: Permet à un utilisateur d’envoyer un message dans un thread, avec réponse facultative à un autre message.
    *     tags: [Threads]
+   *     parameters:
+   *       - name: id
+   *         in: path
+   *         required: true
+   *         description: ID du thread
+   *         schema:
+   *           type: string
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             required:
+   *               - author
+   *               - content
+   *             properties:
+   *               author:
+   *                 type: string
+   *                 example: 671f6e3d99b6e7d2b18f1a9c
+   *               content:
+   *                 type: string
+   *                 example: Bonjour à tous, voici les informations de l’événement !
+   *               replyTo:
+   *                 type: string
+   *                 example: null
+   *     responses:
+   *       201:
+   *         description: Message envoyé avec succès
+   *       400:
+   *         description: Erreur de validation
    */
   addMessage() {
     this.app.post('/thread/:id/message', async (req, res) => {
@@ -96,6 +180,10 @@ const Threads = class Threads {
         const savedMessage = await message.save();
         res.status(201).json(savedMessage);
       } catch (err) {
+        if (err.name === 'ValidationError') {
+          const errors = Object.values(err.errors).map(e => e.message);
+          return res.status(400).json({ code: 400, message: 'Validation Error', errors });
+        }
         res.status(400).json({ code: 400, message: 'Bad Request' });
       }
     });
@@ -106,7 +194,20 @@ const Threads = class Threads {
    * /message/{id}:
    *   delete:
    *     summary: Supprimer un message
+   *     description: Supprime un message spécifique par son ID.
    *     tags: [Threads]
+   *     parameters:
+   *       - name: id
+   *         in: path
+   *         required: true
+   *         description: ID du message à supprimer
+   *         schema:
+   *           type: string
+   *     responses:
+   *       200:
+   *         description: Message supprimé avec succès
+   *       500:
+   *         description: Erreur interne du serveur
    */
   deleteMessage() {
     this.app.delete('/message/:id', async (req, res) => {

@@ -1,10 +1,26 @@
 import mongoose from 'mongoose';
+const { isValidObjectId } = mongoose;
 
 const Schema = new mongoose.Schema({
-  title: { type: String, required: true },
-  group: { type: mongoose.Schema.Types.ObjectId, ref: 'Group', default: null },
-  event: { type: mongoose.Schema.Types.ObjectId, ref: 'Event', default: null },
-  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  title: { type: String, required: true, minlength: 3 },
+  group: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'Group', 
+    default: null, 
+    validate: v => v === null || isValidObjectId(v)
+  },
+  event: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'Event', 
+    default: null, 
+    validate: v => v === null || isValidObjectId(v)
+  },
+  createdBy: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'User', 
+    required: true, 
+    validate: v => isValidObjectId(v)
+  },
   createdAt: { type: Date, default: Date.now }
 }, {
   collection: 'threads',

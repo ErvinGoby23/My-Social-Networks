@@ -1,8 +1,14 @@
 import mongoose from 'mongoose';
+const { isValidObjectId } = mongoose;
 
 const Schema = new mongoose.Schema({
-  poll: { type: mongoose.Schema.Types.ObjectId, ref: 'Poll', required: true },
-  text: { type: String, required: true },
+  poll: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'Poll', 
+    required: true, 
+    validate: v => isValidObjectId(v)
+  },
+  text: { type: String, required: true, minlength: 5 },
   createdAt: { type: Date, default: Date.now }
 }, {
   collection: 'questions',

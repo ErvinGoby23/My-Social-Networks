@@ -24,20 +24,49 @@ const Polls = class Polls {
    * /event/{id}/poll:
    *   post:
    *     summary: Créer un sondage pour un événement
+   *     description: "Permet à un organisateur de créer un sondage lié à un événement donné."
    *     tags: [Polls]
+   *     parameters:
+   *       - name: id
+   *         in: path
+   *         required: true
+   *         description: ID de l'événement
+   *         schema:
+   *           type: string
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             required:
+   *               - title
+   *               - createdBy
+   *             properties:
+   *               title:
+   *                 type: string
+   *                 example: Sondage sur la restauration de l'événement
+   *               createdBy:
+   *                 type: string
+   *                 example: 67204deeb6121b8d0b9a58d1
+   *     responses:
+   *       201:
+   *         description: Sondage créé avec succès
+   *       400:
+   *         description: Erreur de validation
    */
   createPoll() {
     this.app.post('/event/:id/poll', async (req, res) => {
       try {
         const { title, createdBy } = req.body;
-        const poll = new this.PollModel({
-          event: req.params.id,
-          title,
-          createdBy
-        });
+        const poll = new this.PollModel({ event: req.params.id, title, createdBy });
         const saved = await poll.save();
         res.status(201).json(saved);
       } catch (err) {
+        if (err.name === 'ValidationError') {
+          const errors = Object.values(err.errors).map(e => e.message);
+          return res.status(400).json({ code: 400, message: 'Validation Error', errors });
+        }
         res.status(400).json({ code: 400, message: 'Bad Request' });
       }
     });
@@ -48,18 +77,44 @@ const Polls = class Polls {
    * /poll/{id}/question:
    *   post:
    *     summary: Ajouter une question à un sondage
+   *     description: "Ajoute une question à un sondage existant."
    *     tags: [Polls]
+   *     parameters:
+   *       - name: id
+   *         in: path
+   *         required: true
+   *         description: ID du sondage
+   *         schema:
+   *           type: string
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             required:
+   *               - text
+   *             properties:
+   *               text:
+   *                 type: string
+   *                 example: Quel type de repas préférez-vous ?
+   *     responses:
+   *       201:
+   *         description: Question ajoutée avec succès
+   *       400:
+   *         description: Erreur de validation
    */
   addQuestion() {
     this.app.post('/poll/:id/question', async (req, res) => {
       try {
-        const question = new this.QuestionModel({
-          poll: req.params.id,
-          text: req.body.text
-        });
+        const question = new this.QuestionModel({ poll: req.params.id, text: req.body.text });
         const saved = await question.save();
         res.status(201).json(saved);
       } catch (err) {
+        if (err.name === 'ValidationError') {
+          const errors = Object.values(err.errors).map(e => e.message);
+          return res.status(400).json({ code: 400, message: 'Validation Error', errors });
+        }
         res.status(400).json({ code: 400, message: 'Bad Request' });
       }
     });
@@ -70,18 +125,44 @@ const Polls = class Polls {
    * /question/{id}/answer:
    *   post:
    *     summary: Ajouter une réponse possible à une question
+   *     description: "Ajoute une réponse à une question de sondage."
    *     tags: [Polls]
+   *     parameters:
+   *       - name: id
+   *         in: path
+   *         required: true
+   *         description: ID de la question
+   *         schema:
+   *           type: string
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             required:
+   *               - text
+   *             properties:
+   *               text:
+   *                 type: string
+   *                 example: Repas végétarien
+   *     responses:
+   *       201:
+   *         description: Réponse ajoutée avec succès
+   *       400:
+   *         description: Erreur de validation
    */
   addAnswer() {
     this.app.post('/question/:id/answer', async (req, res) => {
       try {
-        const answer = new this.AnswerModel({
-          question: req.params.id,
-          text: req.body.text
-        });
+        const answer = new this.AnswerModel({ question: req.params.id, text: req.body.text });
         const saved = await answer.save();
         res.status(201).json(saved);
       } catch (err) {
+        if (err.name === 'ValidationError') {
+          const errors = Object.values(err.errors).map(e => e.message);
+          return res.status(400).json({ code: 400, message: 'Validation Error', errors });
+        }
         res.status(400).json({ code: 400, message: 'Bad Request' });
       }
     });
@@ -92,27 +173,55 @@ const Polls = class Polls {
    * /question/{id}/vote:
    *   post:
    *     summary: Voter pour une réponse
+   *     description: "Permet à un utilisateur de voter pour une réponse donnée à une question."
    *     tags: [Polls]
+   *     parameters:
+   *       - name: id
+   *         in: path
+   *         required: true
+   *         description: ID de la question
+   *         schema:
+   *           type: string
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             required:
+   *               - user
+   *               - selectedAnswer
+   *             properties:
+   *               user:
+   *                 type: string
+   *                 example: 67204deeb6121b8d0b9a58d1
+   *               selectedAnswer:
+   *                 type: string
+   *                 example: 67204f0ab6121b8d0b9a58d4
+   *     responses:
+   *       201:
+   *         description: Vote enregistré avec succès
+   *       400:
+   *         description: L'utilisateur a déjà voté ou erreur de validation
    */
   addVote() {
     this.app.post('/question/:id/vote', async (req, res) => {
       try {
         const { user, selectedAnswer } = req.body;
 
-        // Vérifie si l'utilisateur a déjà voté sur cette question
         const existing = await this.VoteModel.findOne({ question: req.params.id, user });
         if (existing) {
           return res.status(400).json({ message: 'User has already voted on this question' });
         }
 
-        const vote = new this.VoteModel({
-          question: req.params.id,
-          user,
-          selectedAnswer
-        });
+        const vote = new this.VoteModel({ question: req.params.id, user, selectedAnswer });
         const saved = await vote.save();
         res.status(201).json(saved);
       } catch (err) {
+        if (err.name === 'ValidationError') {
+          const errors = Object.values(err.errors).map(e => e.message);
+          return res.status(400).json({ code: 400, message: 'Validation Error', errors });
+        }
         res.status(400).json({ code: 400, message: 'Bad Request' });
       }
     });
@@ -123,7 +232,20 @@ const Polls = class Polls {
    * /poll/{id}/results:
    *   get:
    *     summary: Voir les résultats d’un sondage
+   *     description: "Retourne la liste des questions, réponses et nombre de votes associés à chaque réponse."
    *     tags: [Polls]
+   *     parameters:
+   *       - name: id
+   *         in: path
+   *         required: true
+   *         description: ID du sondage
+   *         schema:
+   *           type: string
+   *     responses:
+   *       200:
+   *         description: Résultats du sondage retournés avec succès
+   *       500:
+   *         description: Erreur interne du serveur
    */
   getResults() {
     this.app.get('/poll/:id/results', async (req, res) => {

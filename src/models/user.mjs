@@ -1,12 +1,16 @@
 import mongoose from 'mongoose';
 
 const Schema = new mongoose.Schema({
-  firstname: { type: String, required: true },
-  lastname: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  avatar: String,
-  age: Number,
-  city: String
+  firstname: { type: String, required: true, minlength: 2 },
+  lastname: { type: String, required: true, minlength: 2 },
+  email: { 
+    type: String, 
+    required: true, 
+    unique: true, 
+    match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ 
+  },
+  age: { type: Number, min: 13, max: 120 },
+  city: { type: String, maxlength: 100 }
 }, {
   collection: 'users',
   minimize: false,
